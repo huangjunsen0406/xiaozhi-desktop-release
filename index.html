@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xiaozhi Desktop - Pro Architecture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
+        
+        :root {
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+        }
+
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+            background-color: #000;
+            color: #fff;
+        }
+
+        /* 极客风格边框 */
+        .tech-border {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .tech-border:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        /* 辉光效果 */
+        .glow-text {
+            text-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+
+        /* 隐藏滚动条但允许滚动 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+
+        .gradient-mask-b {
+            mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-blue-500/30">
+
+    <!-- 顶部导航 (极简隐形) -->
+    <nav class="fixed w-full z-50 top-0 mix-blend-difference text-white py-6 px-8 flex justify-between items-center">
+        <div class="text-lg font-bold tracking-tighter flex items-center gap-2">
+            <div class="w-3 h-3 bg-white rounded-full"></div>
+            Xiaozhi Desktop <span class="text-xs opacity-50 border border-white/30 px-1 rounded">PRO</span>
+        </div>
+        <div class="flex gap-6 text-sm font-medium tracking-wide">
+            <a href="#overview" class="opacity-60 hover:opacity-100 transition">概览</a>
+            <a href="#capabilities" class="opacity-60 hover:opacity-100 transition">核心能力</a>
+            <a href="#architecture" class="opacity-60 hover:opacity-100 transition">架构</a>
+            <a href="download.html" class="opacity-100 border-b border-white pb-0.5 hover:text-blue-400 hover:border-blue-400 transition">下载构建版</a>
+        </div>
+    </nav>
+
+    <!-- HERO 区域: 极客黑洞风格 -->
+    <section id="overview" class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
+        <!-- 背景光效 -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-900/20 rounded-full blur-[120px] opacity-40 pointer-events-none"></div>
+
+        <div class="z-10 text-center max-w-5xl px-4">
+            <h1 class="text-6xl md:text-9xl font-extrabold tracking-tighter mb-6 hero-title">
+                Desktop<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600">Intelligence.</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-12 hero-sub font-light tracking-wide">
+                Electron 主进程驱动 · Live2D 实时渲染 · 本地神经计算
+            </p>
+            
+            <!-- 按钮组 -->
+            <div class="flex justify-center gap-4 mb-20 hero-btns opacity-0">
+                <a href="download.html" class="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition transform hover:scale-105">即刻体验</a>
+                <a href="#architecture" class="border border-white/20 text-white px-8 py-3 rounded-full font-medium hover:bg-white/5 transition">查看源码架构</a>
+            </div>
+        </div>
+
+        <!-- 悬浮的主界面图 (3D Tilt 效果) -->
+        <div class="relative w-full max-w-6xl mx-auto perspective-1000 hero-image-container opacity-0">
+            <div class="relative transform-style-3d rotate-x-12 scale-90" id="heroImage">
+                <!-- 屏幕光晕 -->
+                <div class="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl opacity-30 blur-lg"></div>
+                <img src="assets/banner1.png" alt="Main Interface" class="relative w-full rounded-xl shadow-2xl border border-white/10 bg-black object-cover">
+                
+                <!-- 浮动元素装饰 -->
+                <!-- <div class="absolute -right-12 top-20 w-48 p-3 bg-black/90 border border-white/10 rounded-lg shadow-2xl backdrop-blur-md hidden md:block floating-badge">
+                    <div class="flex items-center gap-3">
+                        <img src="assets/emotion.png" class="w-8 h-8">
+                        <div class="text-xs">
+                            <div class="font-bold text-gray-200">Emotion Engine</div>
+                            <div class="text-gray-500">Active 45ms</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="absolute -left-8 bottom-32 w-56 p-3 bg-black/90 border border-white/10 rounded-lg shadow-2xl backdrop-blur-md hidden md:block floating-badge" style="transition-delay: 0.1s">
+                    <div class="flex items-center gap-3">
+                        <img src="assets/aiot.png" class="w-8 h-8 rounded bg-white/5 p-1">
+                        <div class="text-xs">
+                            <div class="font-bold text-gray-200">IoT Protocol</div>
+                            <div class="text-gray-500">MQTT Connected</div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心能力: 技术卡片流 (Tech Stack Flow) -->
+    <section id="capabilities" class="py-32 px-4 bg-black relative z-20">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-24 border-l-2 border-white/20 pl-6">
+                <h2 class="text-4xl font-bold mb-2">Core Modules</h2>
+                <p class="text-gray-500">基于插件化架构的六大核心能力</p>
+            </div>
+
+            <!-- 1. Live2D 引擎 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-32 feature-section">
+                <div class="order-2 md:order-1">
+                    <div class="text-xs font-mono text-purple-400 mb-4 border border-purple-500/30 inline-block px-2 py-1 rounded">RENDERER :: PIXI.JS</div>
+                    <h3 class="text-3xl md:text-5xl font-bold mb-6">Live2D 交互引擎</h3>
+                    <p class="text-gray-400 text-lg leading-relaxed mb-8">
+                        不仅仅是显示。通过 renderer/src/pages/Live2dView.vue 实现全链路控制。<br>
+                        支持拖拽物理反馈、口型实时同步 (Lip-Sync)。
+                    </p>
+                    <ul class="space-y-3 text-sm text-gray-500 font-mono">
+                        <li class="flex items-center gap-3">
+                            <span class="w-1.5 h-1.5 bg-purple-500 rounded-full"></span>
+                            <span>模型热加载与配置持久化</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-1.5 h-1.5 bg-purple-500 rounded-full"></span>
+                            <span>点击穿透与边缘吸附</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="order-1 md:order-2 relative">
+                    <div class="absolute inset-0 bg-purple-900/20 blur-[80px] rounded-full"></div>
+                    <div class="tech-border rounded-2xl p-2 relative bg-black">
+                        <img src="assets/live2d.png" class="w-full rounded-xl opacity-90 hover:opacity-100 transition duration-700">
+                        <div class="absolute bottom-6 left-6 right-6 bg-black/80 backdrop-blur border border-white/10 p-4 rounded-lg flex justify-between items-center">
+                            <span class="text-xs font-mono text-gray-400">STATUS: RUNNING</span>
+                            <div class="flex gap-1">
+                                <div class="w-1 h-4 bg-purple-500 animate-pulse"></div>
+                                <div class="w-1 h-3 bg-purple-500/50"></div>
+                                <div class="w-1 h-5 bg-purple-500/80"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. 语音与唤醒 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-32 feature-section">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-green-900/10 blur-[80px] rounded-full"></div>
+                    <div class="tech-border rounded-2xl p-6 relative bg-black h-[400px] flex flex-col justify-between overflow-hidden group">
+                        <img src="assets/唤醒词.png" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition duration-700 mix-blend-screen">
+                        <div class="relative z-10">
+                            <img src="assets/floating-window.png" class="w-12 h-12 mb-4 rounded border border-white/20 bg-black/50">
+                        </div>
+                        <div class="relative z-10 font-mono text-xs text-green-400">
+                            &gt; detecting_audio_stream...<br>
+                            &gt; wake_word_detected: "Hi, Xiaozhi"<br>
+                            &gt; latency: 12ms
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="text-xs font-mono text-green-400 mb-4 border border-green-500/30 inline-block px-2 py-1 rounded">KERNEL :: SHERPA-ONNX</div>
+                    <h3 class="text-3xl md:text-5xl font-bold mb-6">本地离线唤醒</h3>
+                    <p class="text-gray-400 text-lg leading-relaxed mb-8">
+                        隐私优先。基于 sherpa-onnx-node 的 KeywordSpotter 在本地运行。<br>
+                        后台音频窗口 (AudioWindow) 独立采集 PCM，主进程零阻塞。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3. AIoT 控制 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 feature-section">
+                <div class="md:col-span-1 tech-border rounded-2xl p-8 bg-black/50 hover:bg-gray-900/50 transition flex flex-col justify-between h-[400px]">
+                    <div>
+                        <!-- <img src="assets/home-assistant.png" class="w-12 h-12 mb-6 opacity-80"> -->
+                        <h4 class="text-2xl font-bold mb-2">IoT Link</h4>
+                        <p class="text-gray-500">双协议栈支持</p>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between text-sm border-b border-white/10 pb-2">
+                            <span class="text-gray-400">Protocol A</span>
+                            <span class="font-mono text-blue-400">MQTT/5.0</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm border-b border-white/10 pb-2">
+                            <span class="text-gray-400">Protocol B</span>
+                            <span class="font-mono text-yellow-400">WebSocket</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:col-span-2 tech-border rounded-2xl overflow-hidden relative aspect-video h-[400px] group bg-[#0C1526]">
+                    <img src="assets/home-assistant.png" class="absolute inset-0 w-full h-full object-contain opacity-60 group-hover:opacity-80 transition duration-700 transform group-hover:scale-105 bg-[#0C1526]">
+                    <div class="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black to-transparent">
+                        <h4 class="text-2xl font-bold mb-2">全屋智能中枢</h4>
+                        <p class="text-gray-400">Plugins/IoTPlugin.ts 统一调度，反向状态上报。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 架构概览 (您认可的部分 - 保持原样并微调融入) -->
+    <section id="architecture" class="py-32 px-6 border-t border-white/10 bg-[#050505] relative">
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+        
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-24">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">硬核架构，极致性能。</h2>
+                <p class="text-gray-500 font-mono text-sm">SYSTEM_ARCHITECTURE_V1.0</p>
+            </div>
+
+            <!-- 架构图容器 -->
+            <div class="relative grid grid-cols-1 lg:grid-cols-12 gap-6 text-sm font-mono">
+                
+                <!-- 左侧：Main Process -->
+                <div class="lg:col-span-4 space-y-4">
+                    <div class="p-6 rounded-xl border border-blue-500/30 bg-blue-900/5 hover:bg-blue-900/10 transition duration-300">
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                            <h4 class="text-blue-400 font-bold text-lg">Main Process</h4>
+                        </div>
+                        <ul class="space-y-3 text-gray-400">
+                            <li class="flex gap-2">
+                                <span class="text-gray-600">├─</span>
+                                <span class="text-white">src/main/index.ts</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <span class="text-gray-600">├─</span>
+                                <span>Activation & OTA</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <span class="text-gray-600">└─</span>
+                                <span>Window Manager (IPC)</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Plugins -->
+                    <div class="p-6 rounded-xl border border-purple-500/30 bg-purple-900/5">
+                        <h4 class="text-purple-400 font-bold mb-4">Plugin Core (Application.ts)</h4>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-purple-500/50 transition">AudioPlugin</div>
+                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-purple-500/50 transition">IoTPlugin</div>
+                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-purple-500/50 transition">Live2D</div>
+                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-purple-500/50 transition">Chat</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 中间：Protocol Pipe -->
+                <div class="lg:col-span-4 flex flex-col justify-center gap-4">
+                    <div class="p-1 rounded bg-gradient-to-b from-transparent via-white/10 to-transparent flex justify-center">
+                        <div class="w-px h-10 bg-white/20"></div>
+                    </div>
+                    
+                    <div class="p-6 rounded-xl border border-green-500/30 bg-green-900/5 h-full flex flex-col justify-center relative overflow-hidden">
+                        <!-- 动态数据流动画 -->
+                        <div class="absolute top-0 left-0 w-full h-1 bg-green-500/20 animate-[loading_2s_ease-in-out_infinite]"></div>
+                        
+                        <h4 class="text-green-400 font-bold mb-4 text-center">Data & Audio Pipe</h4>
+                        <div class="space-y-4">
+                            <div class="bg-black/40 p-4 rounded border border-white/5">
+                                <span class="block text-white font-bold text-xs mb-1">PROTOCOL LAYER</span>
+                                <span class="text-gray-500 text-xs">MQTT ⇄ WebSocket Failover</span>
+                            </div>
+                            <div class="bg-black/40 p-4 rounded border border-white/5">
+                                <span class="block text-white font-bold text-xs mb-1">AUDIO PROCESSING</span>
+                                <span class="text-gray-500 text-xs">PCM → Opus Enc → Backpressure</span>
+                            </div>
+                            <div class="bg-black/40 p-4 rounded border border-white/5">
+                                <span class="block text-white font-bold text-xs mb-1">WAKE WORD</span>
+                                <span class="text-gray-500 text-xs">Sherpa-ONNX / Node Addon</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-1 rounded bg-gradient-to-b from-transparent via-white/10 to-transparent flex justify-center">
+                        <div class="w-px h-10 bg-white/20"></div>
+                    </div>
+                </div>
+
+                <!-- 右侧：Renderer -->
+                <div class="lg:col-span-4 space-y-4 flex flex-col justify-center">
+                    <div class="p-6 rounded-xl border border-orange-500/30 bg-orange-900/5 h-full">
+                        <div class="flex items-center gap-2 mb-6">
+                            <div class="w-2 h-2 bg-orange-500 rounded-full"></div>
+                            <h4 class="text-orange-400 font-bold text-lg">Renderer (Vue 3)</h4>
+                        </div>
+                        <div class="space-y-6 relative">
+                            <!-- 连线示意 -->
+                            <div class="absolute left-0 top-4 bottom-4 w-px bg-white/10"></div>
+                            
+                            <div class="pl-6 relative">
+                                <div class="absolute left-0 top-2 w-2 h-px bg-white/30"></div>
+                                <h5 class="text-white font-bold">UI Framework</h5>
+                                <p class="text-gray-500 text-xs mt-1">Naive UI + Tailwind</p>
+                            </div>
+                            
+                            <div class="pl-6 relative">
+                                <div class="absolute left-0 top-2 w-2 h-px bg-white/30"></div>
+                                <h5 class="text-white font-bold">State Management</h5>
+                                <p class="text-gray-500 text-xs mt-1">Pinia Store (DeviceState)</p>
+                            </div>
+
+                            <div class="pl-6 relative">
+                                <div class="absolute left-0 top-2 w-2 h-px bg-white/30"></div>
+                                <h5 class="text-white font-bold">Storage</h5>
+                                <p class="text-gray-500 text-xs mt-1">Better-SQLite3 (History)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Call to Action -->
+    <footer class="py-24 border-t border-white/10 text-center relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-600/10 blur-[100px] pointer-events-none"></div>
+        
+        <h2 class="text-4xl font-bold mb-8 relative z-10">Ready to deploy?</h2>
+        <div class="flex justify-center gap-6 relative z-10">
+             <a href="download.html" class="bg-white text-black px-10 py-4 rounded-full font-bold hover:bg-gray-200 transition hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]">下载客户端</a>
+        </div>
+        <p class="mt-12 text-gray-600 text-xs font-mono">
+            &copy; 2025 Xiaozhi Desktop. Built with Electron & Passion.
+            <br>联系方式：951434130@qq.com / junsen
+        </p>
+    </footer>
+
+    <script>
+        // GSAP 配置
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero 动画
+        const tl = gsap.timeline();
+        
+        tl.to(".hero-title", { opacity: 1, y: 0, duration: 1, ease: "power4.out" })
+          .to(".hero-sub", { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.5")
+          .to(".hero-image-container", { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }, "-=0.8")
+          .to(".hero-btns", { opacity: 1, y: 0, duration: 0.8 }, "-=0.5");
+
+        // Hero 图片视差滚动效果
+        gsap.to("#heroImage", {
+            scrollTrigger: {
+                trigger: "#overview",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            },
+            rotationX: 0, // 滚动时放平
+            scale: 1,     // 滚动时放大
+            y: 100        // 稍微下移
+        });
+
+        // 功能区渐入
+        gsap.utils.toArray('.feature-section').forEach(section => {
+            gsap.from(section, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 80%",
+                    toggleActions: "play none none reverse"
+                },
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                ease: "power2.out"
+            });
+        });
+
+        // 架构图连线动画
+        gsap.from("#architecture ul li", {
+            scrollTrigger: {
+                trigger: "#architecture",
+                start: "top 70%"
+            },
+            opacity: 0,
+            x: -20,
+            stagger: 0.1,
+            duration: 0.5
+        });
+    </script>
+</body>
+</html>

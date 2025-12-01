@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Xiaozhi Desktop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
+        
+        :root {
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+        }
+
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+            background-color: #000;
+            color: #fff;
+        }
+
+        /* 极客风格边框 */
+        .tech-border {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .tech-border:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+
+        /* 辉光效果 */
+        .glow-text {
+            text-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+
+        /* 隐藏滚动条但允许滚动 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-blue-500/30 min-h-screen flex flex-col">
+
+    <!-- 顶部导航 -->
+    <nav class="fixed w-full z-50 top-0 mix-blend-difference text-white py-6 px-8 flex justify-between items-center bg-black/50 backdrop-blur-sm border-b border-white/5">
+        <div class="text-lg font-bold tracking-tighter flex items-center gap-2">
+            <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition">
+                <div class="w-3 h-3 bg-white rounded-full"></div>
+                Xiaozhi Desktop <span class="text-xs opacity-50 border border-white/30 px-1 rounded">PRO</span>
+            </a>
+        </div>
+        <div class="flex gap-6 text-sm font-medium tracking-wide">
+            <a href="index.html#overview" class="opacity-60 hover:opacity-100 transition">概览</a>
+            <a href="index.html#capabilities" class="opacity-60 hover:opacity-100 transition">核心能力</a>
+            <a href="index.html#architecture" class="opacity-60 hover:opacity-100 transition">架构</a>
+            <a href="#" class="opacity-100 border-b border-white pb-0.5 text-blue-400 border-blue-400 transition">下载构建版</a>
+        </div>
+    </nav>
+
+    <!-- 主下载区域 -->
+    <main class="flex-grow pt-32 px-4 relative overflow-hidden">
+        <!-- 背景光效 -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-blue-900/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-6xl mx-auto relative z-10">
+            <div class="text-center mb-16">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
+                    Get <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Xiaozhi Desktop</span>
+                </h1>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto font-light">
+                    选择您的平台。体验下一代桌面智能助手。
+                </p>
+            </div>
+
+            <!-- 下载卡片 -->
+            <!-- 下载卡片容器 -->
+            <div id="download-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-24">
+                <!-- Cards will be injected here by JS -->
+            </div>
+
+            <!-- 系统要求 -->
+            <div class="max-w-3xl mx-auto mb-20">
+                <h3 class="text-2xl font-bold mb-8 text-center">System Requirements</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="tech-border rounded-xl p-6">
+                        <h4 class="font-bold text-gray-300 mb-4 border-b border-white/10 pb-2">Minimum</h4>
+                        <ul class="space-y-2 text-sm text-gray-400">
+                            <li class="flex justify-between"><span>OS:</span> <span>Win 10 / macOS 11 / Linux</span></li>
+                            <li class="flex justify-between"><span>Processor:</span> <span>Dual Core CPU</span></li>
+                            <li class="flex justify-between"><span>Memory:</span> <span>4 GB RAM</span></li>
+                            <li class="flex justify-between"><span>Storage:</span> <span>1 GB available space</span></li>
+                        </ul>
+                    </div>
+                    <div class="tech-border rounded-xl p-6">
+                        <h4 class="font-bold text-blue-400 mb-4 border-b border-blue-500/20 pb-2">Recommended</h4>
+                        <ul class="space-y-2 text-sm text-gray-400">
+                            <li class="flex justify-between"><span>OS:</span> <span>Win 11 / macOS 13 / Ubuntu 22+</span></li>
+                            <li class="flex justify-between"><span>Processor:</span> <span>Quad Core or Apple Silicon</span></li>
+                            <li class="flex justify-between"><span>Memory:</span> <span>8 GB RAM</span></li>
+                            <li class="flex justify-between"><span>Graphics:</span> <span>GPU with WebGL 2.0</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-white/10 text-center bg-black z-10">
+        <p class="text-gray-600 text-xs font-mono">
+            &copy; 2025 Xiaozhi Desktop. Built with Electron & Passion.
+        </p>
+    </footer>
+
+    <script>
+        // 下载链接配置：只需要改这里的 url 即可
+        const downloadLinks = {
+            mac: {
+                appleSilicon: '#',
+                intel: '#',
+            },
+            windows: '#',
+            linux: {
+                appImage: '#',
+                deb: '#',
+            },
+        }
+
+        const downloadConfig = {
+            mac: {
+                id: 'mac',
+                name: 'macOS',
+                desc: 'macOS 11.0 (Big Sur) 或更高版本 \n macos需要在终端执行：xattr -cr /Applications/xiaozhi-desktop.app',
+                icon: '<path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.21-1.96 1.07-3.11-1.05.05-2.31.74-3.03 1.59-.67.79-1.25 2.05-1.09 3.2 1.17.09 2.36-.84 3.05-1.68z"/>',
+                buttons: [
+                    { label: 'Apple Silicon (M1/M2/M3)', url: downloadLinks.mac.appleSilicon, primary: true },
+                    { label: 'Intel Chip', url: downloadLinks.mac.intel, primary: false },
+                ],
+            },
+            win: {
+                id: 'win',
+                name: 'Windows',
+                desc: 'Windows 10 / 11 (64-bit)',
+                icon: '<path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>',
+                buttons: [
+                    { label: 'Download for Windows', url: downloadLinks.windows, primary: true, note: 'Version 1.0.0-beta · 64-bit Installer' },
+                ],
+            },
+            linux: {
+                id: 'linux',
+                name: 'Linux',
+                desc: 'Ubuntu 20.04+ / Debian 11+',
+                icon: '<path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.5 16c-.828 0-1.5-.672-1.5-1.5 0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5c0 .828-.672 1.5-1.5 1.5zm-9 0c-.828 0-1.5-.672-1.5-1.5 0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5c0 .828-.672 1.5-1.5 1.5z"/>',
+                buttons: [
+                    { label: 'Download .AppImage', url: downloadLinks.linux.appImage, primary: true },
+                    { label: 'Download .deb', url: downloadLinks.linux.deb, primary: false },
+                ],
+            },
+        }
+
+        const downloads = Object.values(downloadConfig)
+
+        // 渲染卡片
+        const container = document.getElementById('download-cards');
+        
+        downloads.forEach(os => {
+            const card = document.createElement('div');
+            card.className = 'tech-border rounded-2xl p-8 flex flex-col items-center text-center group opacity-0 translate-y-10'; // 初始状态用于动画
+            
+            let buttonsHtml = os.buttons.map(btn => {
+                const baseClass = btn.primary 
+                    ? 'bg-white text-black hover:bg-gray-200' 
+                    : 'border border-white/20 text-white hover:bg-white/5';
+                
+                return `
+                    <a href="${btn.url}" class="block w-full py-3 px-6 rounded-lg font-bold transition flex items-center justify-center gap-2 ${baseClass}">
+                        <span>${btn.label}</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    </a>
+                    ${btn.note ? `<div class="text-xs text-gray-600 pt-2">${btn.note}</div>` : ''}
+                `;
+            }).join('');
+
+            card.innerHTML = `
+                <div class="w-16 h-16 mb-6 bg-white/5 rounded-2xl flex items-center justify-center group-hover:bg-white/10 transition">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">${os.icon}</svg>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">${os.name}</h2>
+                <p class="text-gray-500 text-sm mb-8">${os.desc}</p>
+                <div class="space-y-3 w-full max-w-xs">
+                    ${buttonsHtml}
+                </div>
+            `;
+            
+            container.appendChild(card);
+        });
+
+        // 简单的入场动画
+        gsap.from("h1", { opacity: 0, y: 30, duration: 1, ease: "power3.out" });
+        gsap.from("p", { opacity: 0, y: 20, duration: 1, delay: 0.2, ease: "power3.out" });
+        
+        // 动画显示卡片
+        gsap.to(".tech-border", { 
+            opacity: 1, 
+            y: 0, 
+            duration: 0.8, 
+            delay: 0.4, 
+            stagger: 0.2, 
+            ease: "power2.out" 
+        });
+    </script>
+</body>
+</html>
