@@ -134,13 +134,13 @@
         // 下载链接配置：只需要改这里的 url 即可
         const downloadLinks = {
             mac: {
-                appleSilicon: '#',
+                appleSilicon: 'https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v1.0.4/xiaozhi-desktop-1.0.4-arm64.dmg',
                 intel: '#',
             },
-            windows: '#',
+            windows: 'https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v1.0.4/xiaozhi-desktop-1.0.4-setup.exe',
             linux: {
-                appImage: '#',
-                deb: '#',
+                appImage: 'https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v1.0.4/xiaozhi-desktop-1.0.4-x86_64.AppImage',
+                deb: 'https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v1.0.4/xiaozhi-desktop-1.0.4_amd64.deb',
             },
         }
 
@@ -152,7 +152,7 @@
                 icon: '<path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.21-1.96 1.07-3.11-1.05.05-2.31.74-3.03 1.59-.67.79-1.25 2.05-1.09 3.2 1.17.09 2.36-.84 3.05-1.68z"/>',
                 buttons: [
                     { label: 'Apple Silicon (M1/M2/M3)', url: downloadLinks.mac.appleSilicon, primary: true },
-                    { label: 'Intel Chip', url: downloadLinks.mac.intel, primary: false },
+                    // { label: 'Intel Chip', url: downloadLinks.mac.intel, primary: false },
                 ],
             },
             win: {
@@ -161,7 +161,7 @@
                 desc: 'Windows 10 / 11 (64-bit)',
                 icon: '<path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>',
                 buttons: [
-                    { label: 'Download for Windows', url: downloadLinks.windows, primary: true, note: 'Version 1.0.0-beta · 64-bit Installer' },
+                    { label: 'Download for Windows', url: downloadLinks.windows, primary: true, note: 'Version 1.0.4 · 64-bit Installer' },
                 ],
             },
             linux: {
