@@ -131,16 +131,16 @@
     </footer>
 
     <script>
-        // 下载链接配置：只需要改这里的 url 即可
+        const version = '1.0.5-beta.1'
         const downloadLinks = {
             mac: {
-                appleSilicon: 'https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v1.0.4/xiaozhi-desktop-1.0.4-arm64.dmg',
+                appleSilicon: `https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v${version}/xiaozhi-desktop-${version}-arm64.dmg`,
                 intel: '#',
             },
-            windows: 'https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v1.0.4/xiaozhi-desktop-1.0.4-setup.exe',
+            windows: `https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v${version}/xiaozhi-desktop-${version}-setup.exe`,
             linux: {
-                appImage: 'https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v1.0.4/xiaozhi-desktop-1.0.4-x86_64.AppImage',
-                deb: 'https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v1.0.4/xiaozhi-desktop-1.0.4_amd64.deb',
+                appImage: `https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v${version}/xiaozhi-desktop-${version}-x86_64.AppImage`,
+                deb: `https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v${version}/xiaozhi-desktop_${version}_amd64.deb`,
             },
         }
 
@@ -161,7 +161,7 @@
                 desc: 'Windows 10 / 11 (64-bit)',
                 icon: '<path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>',
                 buttons: [
-                    { label: 'Download for Windows', url: downloadLinks.windows, primary: true, note: 'Version 1.0.4 · 64-bit Installer' },
+                    { label: 'Download for Windows', url: downloadLinks.windows, primary: true, note: `Version ${version} · 64-bit Installer` },
                 ],
             },
             linux: {
