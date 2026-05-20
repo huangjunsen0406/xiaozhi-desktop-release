@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xiaozhi Desktop - Pro Architecture</title>
+    <title data-i18n="index.title">Xiaozhi Desktop - Pro Architecture</title>
+    <script src="js/i18n.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -70,10 +71,12 @@
             Xiaozhi Desktop <span class="text-xs opacity-50 border border-white/30 px-1 rounded">PRO</span>
         </div>
         <div class="flex gap-6 text-sm font-medium tracking-wide">
-            <a href="#overview" class="opacity-60 hover:opacity-100 transition">概览</a>
-            <a href="#capabilities" class="opacity-60 hover:opacity-100 transition">核心能力</a>
-            <a href="#architecture" class="opacity-60 hover:opacity-100 transition">架构</a>
-            <a href="download.html" class="opacity-100 border-b border-white pb-0.5 hover:text-blue-400 hover:border-blue-400 transition">下载构建版</a>
+            <a href="#overview" class="opacity-60 hover:opacity-100 transition" data-i18n="nav.overview">概览</a>
+            <a href="#capabilities" class="opacity-60 hover:opacity-100 transition" data-i18n="nav.capabilities">核心能力</a>
+            <a href="#architecture" class="opacity-60 hover:opacity-100 transition" data-i18n="nav.architecture">架构</a>
+            <a href="download.html" class="opacity-60 hover:opacity-100 transition" data-i18n="nav.download">下载</a>
+            <a href="releases.html" class="opacity-60 hover:opacity-100 transition" data-i18n="nav.releases">历史版本</a>
+            <button id="lang-toggle" onclick="I18N.toggleLang()" class="opacity-60 hover:opacity-100 transition border border-white/20 px-2 py-0.5 rounded text-xs">EN</button>
         </div>
     </nav>
 
@@ -87,14 +90,14 @@
                 Desktop<br>
                 <span class="text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600">Intelligence.</span>
             </h1>
-            <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-12 hero-sub font-light tracking-wide">
+            <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-12 hero-sub font-light tracking-wide" data-i18n="index.hero.subtitle">
                 Electron 主进程驱动 · Live2D 实时渲染 · 本地神经计算
             </p>
             
             <!-- 按钮组 -->
             <div class="flex justify-center gap-4 mb-20 hero-btns opacity-0">
-                <a href="download.html" class="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition transform hover:scale-105">即刻体验</a>
-                <a href="#architecture" class="border border-white/20 text-white px-8 py-3 rounded-full font-medium hover:bg-white/5 transition">查看源码架构</a>
+                <a href="download.html" class="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition transform hover:scale-105" data-i18n="index.hero.cta">即刻体验</a>
+                <a href="#architecture" class="border border-white/20 text-white px-8 py-3 rounded-full font-medium hover:bg-white/5 transition" data-i18n="index.hero.architecture">查看源码架构</a>
             </div>
         </div>
 
@@ -133,27 +136,27 @@
     <section id="capabilities" class="py-32 px-4 bg-black relative z-20">
         <div class="max-w-7xl mx-auto">
             <div class="mb-24 border-l-2 border-white/20 pl-6">
-                <h2 class="text-4xl font-bold mb-2">Core Modules</h2>
-                <p class="text-gray-500">基于插件化架构的六大核心能力</p>
+                <h2 class="text-4xl font-bold mb-2" data-i18n="index.modules.title">Core Modules</h2>
+                <p class="text-gray-500" data-i18n="index.modules.subtitle">基于插件化架构的六大核心能力</p>
             </div>
 
             <!-- 1. Live2D 引擎 -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-32 feature-section">
                 <div class="order-2 md:order-1">
                     <div class="text-xs font-mono text-purple-400 mb-4 border border-purple-500/30 inline-block px-2 py-1 rounded">RENDERER :: PIXI.JS</div>
-                    <h3 class="text-3xl md:text-5xl font-bold mb-6">Live2D 交互引擎</h3>
-                    <p class="text-gray-400 text-lg leading-relaxed mb-8">
+                    <h3 class="text-3xl md:text-5xl font-bold mb-6" data-i18n="index.live2d.title">Live2D 交互引擎</h3>
+                    <p class="text-gray-400 text-lg leading-relaxed mb-8" data-i18n="index.live2d.desc" data-i18n-html>
                         不仅仅是显示。通过 renderer/src/pages/Live2dView.vue 实现全链路控制。<br>
                         支持拖拽物理反馈、口型实时同步 (Lip-Sync)。
                     </p>
                     <ul class="space-y-3 text-sm text-gray-500 font-mono">
                         <li class="flex items-center gap-3">
                             <span class="w-1.5 h-1.5 bg-purple-500 rounded-full"></span>
-                            <span>模型热加载与配置持久化</span>
+                            <span data-i18n="index.live2d.feat1">模型热加载与配置持久化</span>
                         </li>
                         <li class="flex items-center gap-3">
                             <span class="w-1.5 h-1.5 bg-purple-500 rounded-full"></span>
-                            <span>点击穿透与边缘吸附</span>
+                            <span data-i18n="index.live2d.feat2">点击穿透与边缘吸附</span>
                         </li>
                     </ul>
                 </div>
@@ -191,8 +194,8 @@
                 </div>
                 <div>
                     <div class="text-xs font-mono text-green-400 mb-4 border border-green-500/30 inline-block px-2 py-1 rounded">KERNEL :: SHERPA-ONNX</div>
-                    <h3 class="text-3xl md:text-5xl font-bold mb-6">本地离线唤醒</h3>
-                    <p class="text-gray-400 text-lg leading-relaxed mb-8">
+                    <h3 class="text-3xl md:text-5xl font-bold mb-6" data-i18n="index.wake.title">本地离线唤醒</h3>
+                    <p class="text-gray-400 text-lg leading-relaxed mb-8" data-i18n="index.wake.desc" data-i18n-html>
                         隐私优先。基于 sherpa-onnx-node 的 KeywordSpotter 在本地运行。<br>
                         后台音频窗口 (AudioWindow) 独立采集 PCM，主进程零阻塞。
                     </p>
@@ -205,7 +208,7 @@
                     <div>
                         <!-- <img src="assets/home-assistant.png" class="w-12 h-12 mb-6 opacity-80"> -->
                         <h4 class="text-2xl font-bold mb-2">IoT Link</h4>
-                        <p class="text-gray-500">双协议栈支持</p>
+                        <p class="text-gray-500" data-i18n="index.iot.dual">双协议栈支持</p>
                     </div>
                     <div class="space-y-2">
                         <div class="flex items-center justify-between text-sm border-b border-white/10 pb-2">
@@ -221,8 +224,8 @@
                 <div class="md:col-span-2 tech-border rounded-2xl overflow-hidden relative aspect-video h-[400px] group bg-[#0C1526]">
                     <img src="assets/home-assistant.png" class="absolute inset-0 w-full h-full object-contain opacity-60 group-hover:opacity-80 transition duration-700 transform group-hover:scale-105 bg-[#0C1526]">
                     <div class="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black to-transparent">
-                        <h4 class="text-2xl font-bold mb-2">全屋智能中枢</h4>
-                        <p class="text-gray-400">Plugins/IoTPlugin.ts 统一调度，反向状态上报。</p>
+                        <h4 class="text-2xl font-bold mb-2" data-i18n="index.iot.hub">全屋智能中枢</h4>
+                        <p class="text-gray-400" data-i18n="index.iot.hub.desc">Plugins/IoTPlugin.ts 统一调度，反向状态上报。</p>
                     </div>
                 </div>
             </div>
@@ -235,7 +238,7 @@
         
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-24">
-                <h2 class="text-4xl md:text-5xl font-bold mb-6">硬核架构，极致性能。</h2>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6" data-i18n="index.arch.title">硬核架构，极致性能。</h2>
                 <p class="text-gray-500 font-mono text-sm">SYSTEM_ARCHITECTURE_V1.0</p>
             </div>
 
@@ -349,13 +352,13 @@
     <footer class="py-24 border-t border-white/10 text-center relative overflow-hidden">
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-600/10 blur-[100px] pointer-events-none"></div>
         
-        <h2 class="text-4xl font-bold mb-8 relative z-10">Ready to deploy?</h2>
+        <h2 class="text-4xl font-bold mb-8 relative z-10" data-i18n="index.footer.title">Ready to deploy?</h2>
         <div class="flex justify-center gap-6 relative z-10">
-             <a href="download.html" class="bg-white text-black px-10 py-4 rounded-full font-bold hover:bg-gray-200 transition hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]">下载客户端</a>
+             <a href="download.html" class="bg-white text-black px-10 py-4 rounded-full font-bold hover:bg-gray-200 transition hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]" data-i18n="index.footer.cta">下载客户端</a>
         </div>
         <p class="mt-12 text-gray-600 text-xs font-mono">
-            &copy; 2025 Xiaozhi Desktop. Built with Electron & Passion.
-            <br><a href="https://qm.qq.com/q/UR9fPheKkO">社区群: 1053746729</a>
+            <span data-i18n="footer.copyright">&copy; 2025 Xiaozhi Desktop. Built with Electron & Passion.</span>
+            <br><a href="https://qm.qq.com/q/UR9fPheKkO" data-i18n="index.footer.community">社区群: 1053746729</a>
         </p>
     </footer>
 
