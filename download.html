@@ -8,26 +8,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
-        
+
         :root {
             --accent-blue: #3b82f6;
             --accent-purple: #8b5cf6;
             --accent-green: #10b981;
         }
 
-        body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: #000;
             color: #fff;
         }
 
-        /* 极客风格边框 */
         .tech-border {
             border: 1px solid rgba(255, 255, 255, 0.08);
             background: rgba(255, 255, 255, 0.02);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .tech-border:hover {
             border-color: rgba(255, 255, 255, 0.2);
             background: rgba(255, 255, 255, 0.04);
@@ -35,25 +34,24 @@
             box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
         }
 
-        /* 辉光效果 */
         .glow-text {
             text-shadow: 0 0 20px rgba(255,255,255,0.3);
         }
 
-        /* 隐藏滚动条但允许滚动 */
-        ::-webkit-scrollbar {
-            width: 8px;
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        .loading-spinner {
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 0.8s linear infinite;
         }
-        ::-webkit-scrollbar-track {
-            background: #000; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #333; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555; 
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="antialiased selection:bg-blue-500/30 min-h-screen flex flex-col">
@@ -76,7 +74,6 @@
 
     <!-- 主下载区域 -->
     <main class="flex-grow pt-32 px-4 relative overflow-hidden">
-        <!-- 背景光效 -->
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-blue-900/10 rounded-full blur-[120px] pointer-events-none"></div>
 
         <div class="max-w-6xl mx-auto relative z-10">
@@ -84,15 +81,17 @@
                 <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
                     Get <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Xiaozhi Desktop</span>
                 </h1>
-                <p class="text-xl text-gray-400 max-w-2xl mx-auto font-light">
+                <p id="version-text" class="text-xl text-gray-400 max-w-2xl mx-auto font-light">
                     选择您的平台。体验下一代桌面智能助手。
                 </p>
             </div>
 
-            <!-- 下载卡片 -->
             <!-- 下载卡片容器 -->
             <div id="download-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-24">
-                <!-- Cards will be injected here by JS -->
+                <div class="flex items-center justify-center col-span-3 py-20">
+                    <div class="loading-spinner"></div>
+                    <span class="ml-3 text-gray-500">正在获取最新版本...</span>
+                </div>
             </div>
 
             <!-- 系统要求 -->
@@ -131,101 +130,130 @@
     </footer>
 
     <script>
-        const version = '1.0.5-beta.1'
-        const downloadLinks = {
-            mac: {
-                appleSilicon: `https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v${version}/xiaozhi-desktop-${version}-arm64.dmg`,
-                intel: '#',
-            },
-            windows: `https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v${version}/xiaozhi-desktop-${version}-setup.exe`,
-            linux: {
-                appImage: `https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v${version}/xiaozhi-desktop-${version}-x86_64.AppImage`,
-                deb: `https://github.com/huangjunsen0406/xiaozhi-desktop-release/releases/download/v${version}/xiaozhi-desktop_${version}_amd64.deb`,
-            },
+        const REPO = 'huangjunsen0406/xiaozhi-desktop-release'
+        const API_URL = `https://api.github.com/repos/${REPO}/releases/latest`
+
+        function findAsset(assets, test) {
+            return assets.find(a => test(a.name))
         }
 
-        const downloadConfig = {
-            mac: {
-                id: 'mac',
-                name: 'macOS',
-                desc: 'macOS 11.0 (Big Sur) 或更高版本 \n macos需要在终端执行：xattr -cr /Applications/xiaozhi-desktop.app',
-                icon: '<path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.21-1.96 1.07-3.11-1.05.05-2.31.74-3.03 1.59-.67.79-1.25 2.05-1.09 3.2 1.17.09 2.36-.84 3.05-1.68z"/>',
-                buttons: [
-                    { label: 'Apple Silicon (M1/M2/M3)', url: downloadLinks.mac.appleSilicon, primary: true },
-                    // { label: 'Intel Chip', url: downloadLinks.mac.intel, primary: false },
-                ],
-            },
-            win: {
-                id: 'win',
-                name: 'Windows',
-                desc: 'Windows 10 / 11 (64-bit)',
-                icon: '<path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>',
-                buttons: [
-                    { label: 'Download for Windows', url: downloadLinks.windows, primary: true, note: `Version ${version} · 64-bit Installer` },
-                ],
-            },
-            linux: {
-                id: 'linux',
-                name: 'Linux',
-                desc: 'Ubuntu 20.04+ / Debian 11+',
-                icon: '<path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.5 16c-.828 0-1.5-.672-1.5-1.5 0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5c0 .828-.672 1.5-1.5 1.5zm-9 0c-.828 0-1.5-.672-1.5-1.5 0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5c0 .828-.672 1.5-1.5 1.5z"/>',
-                buttons: [
-                    { label: 'Download .AppImage', url: downloadLinks.linux.appImage, primary: true },
-                    { label: 'Download .deb', url: downloadLinks.linux.deb, primary: false },
-                ],
-            },
+        function buildDownloadConfig(version, assets) {
+            const dmg = findAsset(assets, n => n.endsWith('.dmg'))
+            const exe = findAsset(assets, n => n.endsWith('.exe') && !n.endsWith('.blockmap'))
+            const appImage = findAsset(assets, n => n.endsWith('.AppImage'))
+            const deb = findAsset(assets, n => n.endsWith('.deb'))
+
+            return {
+                mac: {
+                    id: 'mac',
+                    name: 'macOS',
+                    desc: 'macOS 11.0 (Big Sur) 或更高版本\n需要在终端执行：xattr -cr /Applications/xiaozhi-desktop.app',
+                    icon: '<path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.21-1.96 1.07-3.11-1.05.05-2.31.74-3.03 1.59-.67.79-1.25 2.05-1.09 3.2 1.17.09 2.36-.84 3.05-1.68z"/>',
+                    buttons: dmg
+                        ? [{ label: `Apple Silicon (.dmg)`, url: dmg.browser_download_url, primary: true }]
+                        : [{ label: '暂无可用版本', url: '#', primary: true, disabled: true }],
+                },
+                win: {
+                    id: 'win',
+                    name: 'Windows',
+                    desc: 'Windows 10 / 11 (64-bit)',
+                    icon: '<path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>',
+                    buttons: exe
+                        ? [{ label: 'Download for Windows', url: exe.browser_download_url, primary: true, note: `Version ${version} · 64-bit Installer` }]
+                        : [{ label: '暂无可用版本', url: '#', primary: true, disabled: true }],
+                },
+                linux: {
+                    id: 'linux',
+                    name: 'Linux',
+                    desc: 'Ubuntu 20.04+ / Debian 11+',
+                    icon: '<path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.5 16c-.828 0-1.5-.672-1.5-1.5 0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5c0 .828-.672 1.5-1.5 1.5zm-9 0c-.828 0-1.5-.672-1.5-1.5 0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5c0 .828-.672 1.5-1.5 1.5z"/>',
+                    buttons: [
+                        appImage ? { label: 'Download .AppImage', url: appImage.browser_download_url, primary: true } : null,
+                        deb ? { label: 'Download .deb', url: deb.browser_download_url, primary: false } : null,
+                    ].filter(Boolean),
+                },
+            }
         }
 
-        const downloads = Object.values(downloadConfig)
+        function renderCards(downloadConfig, version) {
+            const container = document.getElementById('download-cards')
+            container.innerHTML = ''
 
-        // 渲染卡片
-        const container = document.getElementById('download-cards');
-        
-        downloads.forEach(os => {
-            const card = document.createElement('div');
-            card.className = 'tech-border rounded-2xl p-8 flex flex-col items-center text-center group opacity-0 translate-y-10'; // 初始状态用于动画
-            
-            let buttonsHtml = os.buttons.map(btn => {
-                const baseClass = btn.primary 
-                    ? 'bg-white text-black hover:bg-gray-200' 
-                    : 'border border-white/20 text-white hover:bg-white/5';
-                
-                return `
-                    <a href="${btn.url}" class="block w-full py-3 px-6 rounded-lg font-bold transition flex items-center justify-center gap-2 ${baseClass}">
-                        <span>${btn.label}</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            const versionText = document.getElementById('version-text')
+            versionText.innerHTML = `选择您的平台。体验下一代桌面智能助手。<br><span class="text-sm text-gray-600">Latest: ${version}</span>`
+
+            Object.values(downloadConfig).forEach(os => {
+                const card = document.createElement('div')
+                card.className = 'tech-border rounded-2xl p-8 flex flex-col items-center text-center group opacity-0 translate-y-10'
+
+                const buttonsHtml = os.buttons.map(btn => {
+                    if (btn.disabled) {
+                        return `<div class="block w-full py-3 px-6 rounded-lg font-bold border border-white/10 text-gray-600 cursor-not-allowed">${btn.label}</div>`
+                    }
+                    const baseClass = btn.primary
+                        ? 'bg-white text-black hover:bg-gray-200'
+                        : 'border border-white/20 text-white hover:bg-white/5'
+                    return `
+                        <a href="${btn.url}" class="block w-full py-3 px-6 rounded-lg font-bold transition flex items-center justify-center gap-2 ${baseClass}">
+                            <span>${btn.label}</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        </a>
+                        ${btn.note ? `<div class="text-xs text-gray-600 pt-2">${btn.note}</div>` : ''}
+                    `
+                }).join('')
+
+                card.innerHTML = `
+                    <div class="w-16 h-16 mb-6 bg-white/5 rounded-2xl flex items-center justify-center group-hover:bg-white/10 transition">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">${os.icon}</svg>
+                    </div>
+                    <h2 class="text-2xl font-bold mb-2">${os.name}</h2>
+                    <p class="text-gray-500 text-sm mb-8 whitespace-pre-line">${os.desc}</p>
+                    <div class="space-y-3 w-full max-w-xs">
+                        ${buttonsHtml}
+                    </div>
+                `
+
+                container.appendChild(card)
+            })
+
+            gsap.to('.tech-border', {
+                opacity: 1, y: 0, duration: 0.8, delay: 0.1, stagger: 0.2, ease: 'power2.out',
+            })
+        }
+
+        function renderError(message) {
+            const container = document.getElementById('download-cards')
+            container.innerHTML = `
+                <div class="col-span-3 text-center py-20">
+                    <p class="text-gray-500 mb-4">${message}</p>
+                    <a href="https://github.com/${REPO}/releases" target="_blank" class="text-blue-400 hover:underline">
+                        前往 GitHub Releases 页面手动下载 →
                     </a>
-                    ${btn.note ? `<div class="text-xs text-gray-600 pt-2">${btn.note}</div>` : ''}
-                `;
-            }).join('');
-
-            card.innerHTML = `
-                <div class="w-16 h-16 mb-6 bg-white/5 rounded-2xl flex items-center justify-center group-hover:bg-white/10 transition">
-                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">${os.icon}</svg>
                 </div>
-                <h2 class="text-2xl font-bold mb-2">${os.name}</h2>
-                <p class="text-gray-500 text-sm mb-8">${os.desc}</p>
-                <div class="space-y-3 w-full max-w-xs">
-                    ${buttonsHtml}
-                </div>
-            `;
-            
-            container.appendChild(card);
-        });
+            `
+        }
 
-        // 简单的入场动画
-        gsap.from("h1", { opacity: 0, y: 30, duration: 1, ease: "power3.out" });
-        gsap.from("p", { opacity: 0, y: 20, duration: 1, delay: 0.2, ease: "power3.out" });
-        
-        // 动画显示卡片
-        gsap.to(".tech-border", { 
-            opacity: 1, 
-            y: 0, 
-            duration: 0.8, 
-            delay: 0.4, 
-            stagger: 0.2, 
-            ease: "power2.out" 
-        });
+        async function init() {
+            try {
+                const resp = await fetch(API_URL)
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
+                const release = await resp.json()
+
+                const version = release.tag_name.replace(/^v/, '')
+                const assets = release.assets || []
+
+                const config = buildDownloadConfig(version, assets)
+                renderCards(config, version)
+            } catch (err) {
+                console.error('Failed to fetch latest release:', err)
+                renderError('无法获取最新版本信息，请稍后重试。')
+            }
+        }
+
+        gsap.from('h1', { opacity: 0, y: 30, duration: 1, ease: 'power3.out' })
+        gsap.from('#version-text', { opacity: 0, y: 20, duration: 1, delay: 0.2, ease: 'power3.out' })
+
+        init()
     </script>
 </body>
 </html>
