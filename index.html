@@ -244,65 +244,78 @@
 
             <!-- 架构图容器 -->
             <div class="relative grid grid-cols-1 lg:grid-cols-12 gap-6 text-sm font-mono">
-                
-                <!-- 左侧：Main Process -->
+
+                <!-- 左侧：ServiceContainer & Core -->
                 <div class="lg:col-span-4 space-y-4">
                     <div class="p-6 rounded-xl border border-blue-500/30 bg-blue-900/5 hover:bg-blue-900/10 transition duration-300">
                         <div class="flex items-center gap-2 mb-4">
                             <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                            <h4 class="text-blue-400 font-bold text-lg">Main Process</h4>
+                            <h4 class="text-blue-400 font-bold text-lg">ServiceContainer</h4>
                         </div>
                         <ul class="space-y-3 text-gray-400">
                             <li class="flex gap-2">
-                                <span class="text-gray-600">├─</span>
+                                <span class="text-gray-600">&#9679;</span>
                                 <span class="text-white">src/main/index.ts</span>
                             </li>
                             <li class="flex gap-2">
                                 <span class="text-gray-600">├─</span>
-                                <span>Activation & OTA</span>
+                                <span>ActivationService (OTA)</span>
                             </li>
                             <li class="flex gap-2">
                                 <span class="text-gray-600">└─</span>
-                                <span>Window Manager (IPC)</span>
+                                <span>WindowManager (IPC)</span>
                             </li>
                         </ul>
                     </div>
 
-                    <!-- Plugins -->
+                    <!-- Core Modules -->
                     <div class="p-6 rounded-xl border border-purple-500/30 bg-purple-900/5">
-                        <h4 class="text-purple-400 font-bold mb-4">Plugin Core (Application.ts)</h4>
+                        <h4 class="text-purple-400 font-bold mb-4">Core Modules</h4>
                         <div class="grid grid-cols-2 gap-2">
-                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-purple-500/50 transition">AudioPlugin</div>
-                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-purple-500/50 transition">IoTPlugin</div>
-                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-purple-500/50 transition">Live2D</div>
-                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-purple-500/50 transition">Chat</div>
+                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-purple-500/50 transition">EventBus</div>
+                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-purple-500/50 transition">StateManager</div>
+                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-purple-500/50 transition">TaskManager</div>
+                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-purple-500/50 transition">ResourcePool</div>
+                        </div>
+                    </div>
+
+                    <!-- PluginManager -->
+                    <div class="p-6 rounded-xl border border-cyan-500/30 bg-cyan-900/5">
+                        <h4 class="text-cyan-400 font-bold mb-4">PluginManager (6 Plugins)</h4>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-cyan-500/50 transition">Audio</div>
+                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-cyan-500/50 transition">Live2D</div>
+                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-cyan-500/50 transition">WakeWord</div>
+                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-cyan-500/50 transition">MCP</div>
+                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-cyan-500/50 transition">Chat</div>
+                            <div class="bg-white/5 p-2 text-center rounded border border-white/10 hover:border-cyan-500/50 transition">UI</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 中间：Protocol Pipe -->
+                <!-- 中间：Protocol & Audio Pipe -->
                 <div class="lg:col-span-4 flex flex-col justify-center gap-4">
                     <div class="p-1 rounded bg-gradient-to-b from-transparent via-white/10 to-transparent flex justify-center">
                         <div class="w-px h-10 bg-white/20"></div>
                     </div>
-                    
+
                     <div class="p-6 rounded-xl border border-green-500/30 bg-green-900/5 h-full flex flex-col justify-center relative overflow-hidden">
                         <!-- 动态数据流动画 -->
                         <div class="absolute top-0 left-0 w-full h-1 bg-green-500/20 animate-[loading_2s_ease-in-out_infinite]"></div>
-                        
-                        <h4 class="text-green-400 font-bold mb-4 text-center">Data & Audio Pipe</h4>
+
+                        <h4 class="text-green-400 font-bold mb-4 text-center">Protocol & Audio Pipe</h4>
                         <div class="space-y-4">
                             <div class="bg-black/40 p-4 rounded border border-white/5">
-                                <span class="block text-white font-bold text-xs mb-1">PROTOCOL LAYER</span>
-                                <span class="text-gray-500 text-xs">MQTT ⇄ WebSocket Failover</span>
+                                <span class="block text-white font-bold text-xs mb-1">PROTOCOL MANAGER</span>
+                                <span class="text-gray-500 text-xs">WebSocket ⇄ MQTT</span>
                             </div>
                             <div class="bg-black/40 p-4 rounded border border-white/5">
                                 <span class="block text-white font-bold text-xs mb-1">AUDIO PROCESSING</span>
-                                <span class="text-gray-500 text-xs">PCM → Opus Enc → Backpressure</span>
+                                <span class="text-gray-500 text-xs">PCM → Opus Enc/Dec → Stream</span>
                             </div>
                             <div class="bg-black/40 p-4 rounded border border-white/5">
                                 <span class="block text-white font-bold text-xs mb-1">WAKE WORD</span>
-                                <span class="text-gray-500 text-xs">Sherpa-ONNX / Node Addon</span>
+                                <span class="text-gray-500 text-xs">Sherpa-ONNX (Background Window)</span>
                             </div>
                         </div>
                     </div>
@@ -322,23 +335,29 @@
                         <div class="space-y-6 relative">
                             <!-- 连线示意 -->
                             <div class="absolute left-0 top-4 bottom-4 w-px bg-white/10"></div>
-                            
+
                             <div class="pl-6 relative">
                                 <div class="absolute left-0 top-2 w-2 h-px bg-white/30"></div>
                                 <h5 class="text-white font-bold">UI Framework</h5>
                                 <p class="text-gray-500 text-xs mt-1">Naive UI + Tailwind</p>
                             </div>
-                            
+
                             <div class="pl-6 relative">
                                 <div class="absolute left-0 top-2 w-2 h-px bg-white/30"></div>
-                                <h5 class="text-white font-bold">State Management</h5>
-                                <p class="text-gray-500 text-xs mt-1">Pinia Store (DeviceState)</p>
+                                <h5 class="text-white font-bold">State</h5>
+                                <p class="text-gray-500 text-xs mt-1">Pinia AppStore</p>
+                            </div>
+
+                            <div class="pl-6 relative">
+                                <div class="absolute left-0 top-2 w-2 h-px bg-white/30"></div>
+                                <h5 class="text-white font-bold">Views</h5>
+                                <p class="text-gray-500 text-xs mt-1">Main · Live2D · Chat · Mini · Pets</p>
                             </div>
 
                             <div class="pl-6 relative">
                                 <div class="absolute left-0 top-2 w-2 h-px bg-white/30"></div>
                                 <h5 class="text-white font-bold">Storage</h5>
-                                <p class="text-gray-500 text-xs mt-1">Better-SQLite3 (History)</p>
+                                <p class="text-gray-500 text-xs mt-1">Better-SQLite3</p>
                             </div>
                         </div>
                     </div>
