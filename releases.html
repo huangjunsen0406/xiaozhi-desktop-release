@@ -144,19 +144,52 @@
 
         const DOWNLOAD_ICON = `<svg class="w-4 h-4 mr-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>`
 
+        function parseArch(filename) {
+            const n = filename.toLowerCase()
+            if (n.includes('arm64')) return 'arm64'
+            if (n.includes('ia32')) return 'ia32'
+            if (n.includes('x64') || n.includes('x86_64') || n.includes('amd64')) return 'x64'
+            return null
+        }
+
         function classifyAssets(assets) {
+            const macOrder = { arm64: 0, x64: 1 }
+            const defaultOrder = { x64: 0, arm64: 1, ia32: 2 }
             const result = { mac: [], win: [], linux: [] }
+
             for (const a of assets) {
                 const n = a.name.toLowerCase()
+                const arch = parseArch(a.name)
+                const url = a.browser_download_url
+
                 if (n.endsWith('.dmg')) {
-                    result.mac.push({ label: I18N.t('releases.mac.dmg'), url: a.browser_download_url })
-                } else if (n.endsWith('.exe')) {
-                    result.win.push({ label: I18N.t('releases.win.exe'), url: a.browser_download_url })
+                    const sort = macOrder[arch] ?? 99
+                    const label = arch === 'arm64' ? I18N.t('arch.mac.arm64')
+                               : arch === 'x64'   ? I18N.t('arch.mac.x64')
+                               : I18N.t('arch.mac.universal')
+                    result.mac.push({ label, url, sort })
+                } else if (n.endsWith('.exe') && !n.includes('.blockmap')) {
+                    const sort = defaultOrder[arch] ?? 99
+                    const label = arch === 'ia32' ? I18N.t('arch.win.ia32')
+                               : arch === 'x64'  ? I18N.t('arch.win.x64')
+                               : I18N.t('arch.win.universal')
+                    result.win.push({ label, url, sort })
                 } else if (n.endsWith('.appimage')) {
-                    result.linux.push({ label: I18N.t('releases.linux.appimage'), url: a.browser_download_url })
+                    const sort = defaultOrder[arch] ?? 99
+                    const label = arch === 'arm64' ? I18N.t('arch.linux.appimage.arm64')
+                               : arch === 'x64'   ? I18N.t('arch.linux.appimage.x64')
+                               : I18N.t('arch.linux.appimage')
+                    result.linux.push({ label, url, sort })
                 } else if (n.endsWith('.deb')) {
-                    result.linux.push({ label: I18N.t('releases.linux.deb'), url: a.browser_download_url })
+                    const sort = (defaultOrder[arch] ?? 99) + 10
+                    const label = arch === 'arm64' ? I18N.t('arch.linux.deb.arm64')
+                               : arch === 'x64'   ? I18N.t('arch.linux.deb.x64')
+                               : I18N.t('arch.linux.deb')
+                    result.linux.push({ label, url, sort })
                 }
+            }
+            for (const list of Object.values(result)) {
+                list.sort((a, b) => a.sort - b.sort)
             }
             return result
         }

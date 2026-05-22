@@ -136,46 +136,81 @@
         const REPO = 'huangjunsen0406/xiaozhi-desktop-release'
         const API_URL = `https://api.github.com/repos/${REPO}/releases/latest`
 
-        function findAsset(assets, test) {
-            return assets.find(a => test(a.name))
+        function parseArch(filename) {
+            const n = filename.toLowerCase()
+            if (n.includes('arm64')) return 'arm64'
+            if (n.includes('ia32')) return 'ia32'
+            if (n.includes('x64') || n.includes('x86_64') || n.includes('amd64')) return 'x64'
+            return null
         }
 
         function buildDownloadConfig(version, assets) {
-            const dmg = findAsset(assets, n => n.endsWith('.dmg'))
-            const exe = findAsset(assets, n => n.endsWith('.exe') && !n.endsWith('.blockmap'))
-            const appImage = findAsset(assets, n => n.endsWith('.AppImage'))
-            const deb = findAsset(assets, n => n.endsWith('.deb'))
-
-            return {
+            const config = {
                 mac: {
-                    id: 'mac',
-                    name: 'macOS',
+                    id: 'mac', name: 'macOS',
                     desc: I18N.t('download.mac.desc'),
                     icon: '<path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.21-1.96 1.07-3.11-1.05.05-2.31.74-3.03 1.59-.67.79-1.25 2.05-1.09 3.2 1.17.09 2.36-.84 3.05-1.68z"/>',
-                    buttons: dmg
-                        ? [{ label: I18N.t('download.mac.btn'), url: dmg.browser_download_url, primary: true }]
-                        : [{ label: I18N.t('download.no.version'), url: '#', primary: true, disabled: true }],
+                    buttons: [],
                 },
                 win: {
-                    id: 'win',
-                    name: 'Windows',
+                    id: 'win', name: 'Windows',
                     desc: I18N.t('download.win.desc'),
                     icon: '<path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>',
-                    buttons: exe
-                        ? [{ label: I18N.t('download.win.btn'), url: exe.browser_download_url, primary: true, note: I18N.t('download.win.note', {version}) }]
-                        : [{ label: I18N.t('download.no.version'), url: '#', primary: true, disabled: true }],
+                    buttons: [],
                 },
                 linux: {
-                    id: 'linux',
-                    name: 'Linux',
+                    id: 'linux', name: 'Linux',
                     desc: I18N.t('download.linux.desc'),
                     icon: '<path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.5 16c-.828 0-1.5-.672-1.5-1.5 0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5c0 .828-.672 1.5-1.5 1.5zm-9 0c-.828 0-1.5-.672-1.5-1.5 0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5c0 .828-.672 1.5-1.5 1.5z"/>',
-                    buttons: [
-                        appImage ? { label: I18N.t('download.linux.appimage'), url: appImage.browser_download_url, primary: true } : null,
-                        deb ? { label: I18N.t('download.linux.deb'), url: deb.browser_download_url, primary: false } : null,
-                    ].filter(Boolean),
+                    buttons: [],
                 },
             }
+
+            // macOS: arm64 first; Windows/Linux: x64 first
+            const macOrder = { arm64: 0, x64: 1 }
+            const defaultOrder = { x64: 0, arm64: 1, ia32: 2 }
+
+            for (const a of assets) {
+                const n = a.name.toLowerCase()
+                const arch = parseArch(a.name)
+                const url = a.browser_download_url
+
+                if (n.endsWith('.dmg')) {
+                    const sort = macOrder[arch] ?? 99
+                    const label = arch === 'arm64' ? I18N.t('arch.mac.arm64')
+                               : arch === 'x64'   ? I18N.t('arch.mac.x64')
+                               : I18N.t('arch.mac.universal')
+                    config.mac.buttons.push({ label, url, primary: true, sort })
+                } else if (n.endsWith('.exe') && !n.includes('.blockmap')) {
+                    const sort = defaultOrder[arch] ?? 99
+                    const label = arch === 'ia32' ? I18N.t('arch.win.ia32')
+                               : arch === 'x64'  ? I18N.t('arch.win.x64')
+                               : I18N.t('arch.win.universal')
+                    config.win.buttons.push({ label, url, primary: arch !== 'ia32', sort })
+                } else if (n.endsWith('.appimage')) {
+                    const sort = defaultOrder[arch] ?? 99
+                    const label = arch === 'arm64' ? I18N.t('arch.linux.appimage.arm64')
+                               : arch === 'x64'   ? I18N.t('arch.linux.appimage.x64')
+                               : I18N.t('arch.linux.appimage')
+                    config.linux.buttons.push({ label, url, primary: true, sort })
+                } else if (n.endsWith('.deb')) {
+                    const sort = (defaultOrder[arch] ?? 99) + 10
+                    const label = arch === 'arm64' ? I18N.t('arch.linux.deb.arm64')
+                               : arch === 'x64'   ? I18N.t('arch.linux.deb.x64')
+                               : I18N.t('arch.linux.deb')
+                    config.linux.buttons.push({ label, url, primary: false, sort })
+                }
+            }
+
+            for (const os of Object.values(config)) {
+                if (os.buttons.length === 0) {
+                    os.buttons.push({ label: I18N.t('download.no.version'), url: '#', primary: true, disabled: true })
+                } else {
+                    os.buttons.sort((a, b) => a.sort - b.sort)
+                }
+            }
+
+            return config
         }
 
         function renderCards(downloadConfig, version) {
@@ -201,7 +236,6 @@
                             <span>${btn.label}</span>
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                         </a>
-                        ${btn.note ? `<div class="text-xs text-gray-600 pt-2">${btn.note}</div>` : ''}
                     `
                 }).join('')
 
